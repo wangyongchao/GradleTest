@@ -1,0 +1,33 @@
+<resources>
+
+    <style name="UpdateTheme" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="lib_update_titleStyle">@style/lib_update_title_style</item>
+        <item name="lib_update_splitStyle">@style/lib_update_split_style</item>
+        <item name="lib_update_contentStyle">@style/lib_update_content_style</item>
+    </style>
+
+    <!--标题栏样式 -->
+    <style name="lib_update_title_style">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!--标题栏下面分隔条样式 -->
+    <style name="lib_update_split_style">
+        <item name="android:background">#2AACFF</item>
+        <item name="android:minHeight">1dp</item>
+        <item name="android:maxHeight">1dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <!--更新内容样式 -->
+    <style name="lib_update_content_style">
+        <item name="android:textColor">#AAABAF</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+</resources>

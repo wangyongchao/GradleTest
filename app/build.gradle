@@ -1,0 +1,150 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        applicationId "com.gradletest.test"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+}
+
+//字符串
+task testGroovyString << {
+    def str1 = 'test'//单引号 静态字符串
+    def str2 = '$str1 groovy'
+    def str3 = "$str1 groovy"//双引号 动态字符串
+    println(str2 + "  " + str3)//$str1 groovy  test groovy
+    def str4 = """is
+        test
+        Groovy """
+    println(str4)//三引号 保留既定的格式
+
+    def str5 = "Groovy is \n the best"//反斜杠 转义符
+    println(str5)
+    println("-------------------------")
+    def opStr = "Hello"
+    def opStr2 = "$opStr-Groovy"
+    println(opStr2)
+    println(opStr[4])//相当于 charAt
+    println(opStr * 2)//HelloHello
+    println(opStr2 - opStr)//-Groovy
+    println(opStr[0..2])//相当于 subString左右都包括 Hel
+    println(opStr[0, 1, 4])//取对应角标的字母 Heo
+    println(opStr[-3..-1])//从右边往左边取角标位置依次-1,-2,... llo
+    println(opStr[-3, 1])
+    def opStr3 = "a==b==c==d"
+    println(opStr3.split("=="))
+    println(opStr3.toUpperCase())
+}
+task testGroovyNumber << {
+    def x = 5
+    def y = 6
+    def z = x / y
+    println(x.plus(y))
+    println(x.minus(y))
+    println(x.multiply(y))//乘法
+    println(x.div(y))//除法
+    println(x.mod(y))//取余数
+    println(x.next())//自增
+    println(x.previous())//自减
+    println(x.power(y))//自增
+    println(x.equals(y))
+    println(x.compareTo(y))
+    println(x.asType(Double))
+}
+
+class Clazz {
+    String a;
+    String b;
+
+}
+
+class ClazzA {
+    def x;
+    def y;
+
+    def plus() {
+        return x + y;
+    }
+}
+
+
+class ClazzB {
+    def x;
+    def y;
+
+    def plus(other) {
+        return new ClazzB(x: this.x, y: this.y);
+    }
+}
+
+task testGroovyClass << {
+    def clazz = new Clazz(a: "aaa", b: "bbb")
+    println(clazz.a)
+
+    def clazzA = new ClazzA(x: 3, y: 4)
+    println(clazzA.plus())
+
+}
+task testGoovyIf << {
+
+//    ※ 当传入Boolean时true为真，false为假；
+//    ※ 当传入数字时非0为真，0为假；
+//    ※ 当传入字符串时非空为真，空字符串””为假；
+//    ※ 当传入集合时长度非0为真，元素个数等于0为假；
+//    ※ 当传入普通Object时初始化过为真，null为假。
+    if (true) {
+        println("true")
+    } else {
+        println("false")
+    }
+
+    def arg =2
+    switch (arg) {
+        case [1, 2, 3, 4]:
+            println("arg in [1,2,3,4]")
+            break
+        case 2:
+            println("arg is not 2")
+            break
+        default:
+            println("defalut")
+    }
+
+    def j=3
+    while (j){
+        print("j="+j+",")
+        j--
+    }
+
+for(k in 1..5){
+    print("k="+k)
+}
+}
+
+task testGroovyList <<{
+    def list=[1,2,3,3,2,4]
+    println("list="+list)
+
+
+}
+
+
+

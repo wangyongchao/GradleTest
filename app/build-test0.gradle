@@ -1,0 +1,196 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.gradletest.test"
+        minSdkVersion 22
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+//-----------------------task---------------------------------
+//task两种写法
+task hello3 {
+    doLast {
+        println "hello"
+    }
+
+}
+
+task hello2 << {
+    println 'Hello world!'
+}
+
+
+task count << {
+    4.times {
+        println "$it "
+    }
+}
+
+//依赖另外task
+task intro(dependsOn: hello2) << {
+    println("introddd")
+}
+
+task taskX(dependsOn: 'taskY') << {
+    println 'taskX'
+}
+task taskY << {
+    println 'taskY'
+}
+
+4.times { counter ->
+    task "task$counter" << {
+        println "I'm task number $counter"
+    }
+}
+task0.dependsOn task2, task3
+
+//task行为
+task hello << {
+    println 'Hello Earth'
+}
+hello << {
+    println 'Hello Jupiter'
+}
+
+hello.doFirst {
+    println 'Hello Venus'
+}
+hello.doLast {
+    println 'Hello Mars'
+}
+
+//短标记法
+hello.doLast {
+    println "Greetings from the $hello.name task."
+}
+//自定义属性
+task myTask {
+    ext.myProperty = "myProperty"
+}
+task printMyTask << {
+    println myTask.myProperty
+}
+
+//默认任务,执行gradle命令默认执行
+defaultTasks 'clean1', 'run'
+
+task clean1 << {
+    println 'Default Cleaning!'
+}
+
+task run << {
+    println 'Default Running!'
+}
+
+task other << {
+    println "I'm not a default task!"
+}
+
+//
+task distribution << {
+    println "We build the zip with version=$version"
+}
+
+task release(dependsOn: 'distribution') << {
+    println 'We release now'
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(release)) {
+        version = '1.0'
+    } else {
+        version = '1.0-SNAPSHOT'
+    }
+}
+
+//---------------------java构建--------------------------------------
+/**
+ * gradle build命令:Gralde会编译并执行单元测试,并且将src/main/*下面class和资源文件打包
+ * clean命令:删除build目录以及所有构建完成的文件.
+ * assemble命令：编译并打包jar文件,但不会执行单元测试.一些其他插件可能会增强这个任务的功能.
+ * 例如,如果采用了War插件, 这个任务便会为你的项目打出War包。
+ * check:编译并测试代码，不打包
+ *
+ *
+ * gradle dist -x testddd -x:排除某个任务
+ */
+
+
+
+//---------------------多任务依赖--------------------------------------
+/**
+ *1.每个任务仅会被调用一次
+ *
+ * 2.任务调用失败Gradle就是中断执行，采用了--continue选项,Gralde会调用每一个任务以及它们依赖的任务.
+ * 而不是一旦出现错误就会中断执行.所有错误信息都会在最后被列出来.
+ *
+ * 3.简化任务名称，你也可以用驼峰命名的任务中每个单词的首字母进行调用 gradle -cT   (compileTest)
+ *
+ * 4.选择构建的文件或者目录,gradle -b frameowrk/build.gradle generateFrameworkJar,使用-b指定要构建的文件就是需要构建的.gradle文件。
+ * gradle -p 使用-p参数指定构建的目录, gradle -p business/customer/ build 编译customer模块 很有用，不用每次切换目录
+ *
+ * 5.gradle projects:列出子项目名称列表
+ *
+ * 6.为项目添加描述信息：description="the gradle test project"
+ *
+ * 7.gradle -q tasks --all:列出项目中所有任务以及任务之间的依赖关系.
+ *
+ * 8.radle help --task someTask可以显示指定任务的详细信息. 或者多项目构建中相同任务名称的所有任务的信息
+ *
+ * 9.gradle dependencies 会列出项目的依赖列表,所有依赖会根据任务区分,以树型结构展示出来
+ * gradle -q dependencies customer:dependencies app:dependencies:列出某个模块的依赖
+ * --configuration参数来查看 指定构建任务的依赖情况.gradle -q customer:dependencies --configuration compile
+ *
+ * 10.--profile参数可以收集一些构建期间的信息并保存到 build/reports/profile目录下并且以构建时间命名这些文件.
+ */
+
+task compile << {
+    println 'compiling source'
+}
+
+task compileTest(dependsOn: compile) << {
+    println 'compiling unit tests'
+}
+
+task testddd(dependsOn: [compile, compileTest]) << {
+    println 'running unit tests'
+}
+
+task dist(dependsOn: [compile, testddd]) << {
+    println 'building the distribution'
+}
+
+dist{
+    description='distdistdistdist'
+    group='build'
+}
+
+
+description="the gradle test project"
+
+
+
+//----------构建脚本编写
+
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+}
